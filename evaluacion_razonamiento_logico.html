@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ejercicio en Clase – Razonamiento Lógico · Corte 1 · Unicórdoba</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      font-size: 11pt;
+      color: #1a1a2e;
+      background: #fff;
+    }
+
+    /* ── Cabecera ── */
+    .header {
+      background: linear-gradient(135deg, #0a3d62 0%, #1e5f8b 60%, #2980b9 100%);
+      color: #fff;
+      padding: 28px 40px 22px;
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      border-bottom: 4px solid #f39c12;
+    }
+
+    .header-logo {
+      width: 68px;
+      height: 68px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      flex-shrink: 0;
+      border: 2px solid rgba(255, 255, 255, 0.35);
+    }
+
+    .header-text h1 {
+      font-size: 15pt;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .header-text p {
+      font-size: 9.5pt;
+      opacity: 0.85;
+      margin-top: 3px;
+    }
+
+    .header-text .subtitle {
+      margin-top: 6px;
+      font-size: 10pt;
+      font-weight: 600;
+      color: #f9ca24;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    /* ── Ficha de datos ── */
+    .ficha {
+      background: #f0f4f8;
+      border-left: 4px solid #0a3d62;
+      margin: 20px 40px;
+      padding: 14px 20px;
+      border-radius: 0 6px 6px 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px 24px;
+      font-size: 9.5pt;
+    }
+
+    .ficha-item label {
+      font-weight: 600;
+      color: #0a3d62;
+      display: block;
+      font-size: 8pt;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+    }
+
+    .ficha-item .line {
+      border-bottom: 1.5px solid #a0aec0;
+      min-height: 18px;
+      padding-bottom: 2px;
+    }
+
+    /* ── Instrucciones ── */
+    .instrucciones {
+      margin: 0 40px 20px;
+      background: #fff8e1;
+      border: 1.5px solid #f39c12;
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: 9.5pt;
+    }
+
+    .instrucciones h2 {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #b7791f;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .instrucciones ol {
+      padding-left: 18px;
+      line-height: 1.8;
+      color: #4a3728;
+    }
+
+    /* ── Preguntas ── */
+    .preguntas {
+      padding: 0 40px 40px;
+    }
+
+    .pregunta {
+      margin-bottom: 32px;
+      page-break-inside: avoid;
+    }
+
+    .pregunta-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .pregunta-num {
+      background: #0a3d62;
+      color: #fff;
+      font-weight: 700;
+      font-size: 11pt;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .pregunta-puntos {
+      background: #edf2f7;
+      border: 1px solid #cbd5e0;
+      border-radius: 12px;
+      padding: 3px 10px;
+      font-size: 8.5pt;
+      color: #4a5568;
+      font-weight: 500;
+    }
+
+    .pregunta-tipo {
+      background: #e8f4fd;
+      border: 1px solid #bee3f8;
+      border-radius: 12px;
+      padding: 3px 10px;
+      font-size: 8.5pt;
+      color: #2b6cb0;
+      font-weight: 500;
+    }
+
+    .caso {
+      background: #f9fafb;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 12px;
+    }
+
+    .caso-titulo {
+      font-size: 9pt;
+      font-weight: 700;
+      color: #0a3d62;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .caso-texto {
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 12pt;
+      font-style: italic;
+      line-height: 1.65;
+      color: #2d3748;
+      border-left: 3px solid #4299e1;
+      padding-left: 14px;
+    }
+
+    .glosario {
+      margin: 10px 0;
+    }
+
+    .glosario-titulo {
+      font-size: 9pt;
+      font-weight: 600;
+      color: #4a5568;
+      margin-bottom: 6px;
+    }
+
+    .glosario ul {
+      padding-left: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .glosario li {
+      font-size: 10pt;
+      color: #2d3748;
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .glosario li .var {
+      background: #0a3d62;
+      color: #fff;
+      font-weight: 700;
+      font-size: 9pt;
+      padding: 1px 7px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      flex-shrink: 0;
+    }
+
+    .consigna {
+      background: #0a3d62;
+      color: #fff;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 9.5pt;
+      font-weight: 500;
+      margin: 10px 0;
+      line-height: 1.5;
+    }
+
+    /* ── Opciones ── */
+    .opciones {
+      margin-top: 10px;
+    }
+
+    .opcion {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 12px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 6px;
+      margin-bottom: 6px;
+      font-size: 10pt;
+    }
+
+    .opcion:hover {
+      background: #f7fafc;
+    }
+
+    .opcion-letra {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 1.5px solid #a0aec0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 9pt;
+      color: #4a5568;
+      flex-shrink: 0;
+    }
+
+    .opcion-texto {
+      line-height: 1.4;
+      color: #2d3748;
+    }
+
+    /* ── Tabla de verdad ── */
+    .tabla-container {
+      margin-top: 12px;
+    }
+
+    .tabla-titulo {
+      font-size: 9pt;
+      font-weight: 600;
+      color: #718096;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    table.verdad {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9.5pt;
+    }
+
+    table.verdad th {
+      background: #0a3d62;
+      color: #fff;
+      padding: 7px 10px;
+      text-align: center;
+      font-weight: 600;
+      font-family: 'Courier New', monospace;
+      font-size: 9pt;
+    }
+
+    table.verdad td {
+      border: 1px solid #cbd5e0;
+      padding: 7px 10px;
+      text-align: center;
+      height: 26px;
+      color: #718096;
+      font-size: 9pt;
+    }
+
+    table.verdad tr:nth-child(even) td {
+      background: #f7fafc;
+    }
+
+    /* ── Separador ── */
+    .separador {
+      border: none;
+      border-top: 1.5px dashed #e2e8f0;
+      margin: 28px 0;
+    }
+
+    /* ── Pie de página ── */
+    .footer {
+      margin: 0 40px;
+      padding: 14px 0;
+      border-top: 2px solid #0a3d62;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 8.5pt;
+      color: #718096;
+    }
+
+    .footer strong {
+      color: #0a3d62;
+    }
+
+    /* ── Print ── */
+    @media print {
+      body {
+        font-size: 10.5pt;
+      }
+
+      .header {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .pregunta-num {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .consigna {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      table.verdad th {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .ficha {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .instrucciones {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .var {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .pregunta {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- CABECERA -->
+  <div class="header">
+    <div class="header-logo">🎓</div>
+    <div class="header-text">
+      <h1>Universidad de Córdoba — Montería, Colombia</h1>
+      <p>Facultad de Educación · Licenciatura en Educación Infantil</p>
+      <p class="subtitle">Ejercicio en Clase · Razonamiento Lógico · Primer Corte · 2026-I</p>
+    </div>
+  </div>
+
+  <!-- FICHA DE DATOS -->
+  <div class="ficha">
+    <div class="ficha-item">
+      <label>Nombre del estudiante</label>
+      <div class="line"></div>
+    </div>
+    <div class="ficha-item">
+      <label>Código estudiantil</label>
+      <div class="line"></div>
+    </div>
+    <div class="ficha-item">
+      <label>Semestre / Grupo</label>
+      <div class="line"></div>
+    </div>
+    <div class="ficha-item">
+      <label>Programa académico</label>
+      <div class="line" style="font-size:9pt;color:#0a3d62;font-weight:500;">Licenciatura en Educación Infantil</div>
+    </div>
+    <div class="ficha-item">
+      <label>Fecha</label>
+      <div class="line"></div>
+    </div>
+    <div class="ficha-item" style="grid-column: span 1;">
+      <label>Docente</label>
+      <div class="line" style="font-size:8.5pt;color:#0a3d62;font-weight:500;">Luis Alberto Buelvas Cogollo</div>
+    </div>
+  </div>
+
+  <!-- BLOQUE DOCENTE -->
+  <div
+    style="margin: 0 40px 14px; background:#e8f4fd; border-left:4px solid #2980b9; border-radius:0 6px 6px 0; padding:10px 16px; font-size:8.8pt; color:#1a365d;">
+    <strong>👨‍🏫 Docente:</strong> Luis Alberto Buelvas Cogollo &nbsp;·&nbsp;
+    Lic. en Informática y Medios Audiovisuales &nbsp;·&nbsp;
+    Magíster en Educación &nbsp;·&nbsp;
+    Estudiante Maestría en Inteligencia Artificial e Ingeniería del Conocimiento
+  </div>
+
+  <!-- INSTRUCCIONES -->
+  <div class="instrucciones">
+    <h2>📌 Instrucciones del ejercicio</h2>
+    <ol>
+      <li>Lee cuidadosamente cada enunciado en lenguaje natural antes de responder.</li>
+      <li><strong>Debes construir la expresión lógica por ti mismo</strong> —el enunciado no te da la fórmula
+        directamente.</li>
+      <li>Completa la <strong>tabla de verdad</strong> en el espacio provisto y clasifica la proposición resultante.
+      </li>
+      <li>Selecciona una única respuesta por pregunta. Cada pregunta vale <strong>2 puntos</strong> (total: 10 puntos).
+      </li>
+      <li>Este es un ejercicio de práctica en clase para fortalecer las habilidades de razonamiento lógico.</li>
+    </ol>
+  </div>
+
+  <!-- PREGUNTAS -->
+  <div class="preguntas">
+
+    <!-- ══════════════════════════════════════════════
+         PREGUNTA 1 — Silogismo Hipotético + Modus Ponens
+         Resultado esperado: TAUTOLOGÍA
+         Fórmula: [(p → q) ∧ (q → r) ∧ p] → r
+         ═════════════════════════════════════════════════ -->
+    <div class="pregunta">
+      <div class="pregunta-header">
+        <div class="pregunta-num">1</div>
+        <span class="pregunta-puntos">2 puntos</span>
+        <span class="pregunta-tipo">Selección múltiple · Única respuesta</span>
+      </div>
+
+      <div class="caso">
+        <div class="caso-titulo">📋 Caso — Formación docente</div>
+        <div class="caso-texto">
+          "Para que una maestra de educación infantil obtenga el título universitario,
+          es condición necesaria que apruebe el trabajo de grado.
+          A su vez, para poder presentar el trabajo de grado,
+          la maestra debe haber completado previamente sus prácticas pedagógicas.
+          Se confirma que la maestra en cuestión sí obtuvo el título universitario."
+        </div>
+      </div>
+
+      <div class="glosario">
+        <div class="glosario-titulo">Glosario de proposiciones simples:</div>
+        <ul>
+          <li><span class="var">p</span> La maestra obtiene el título universitario</li>
+          <li><span class="var">q</span> La maestra aprueba el trabajo de grado</li>
+          <li><span class="var">r</span> La maestra completó las prácticas pedagógicas</li>
+        </ul>
+      </div>
+
+      <div class="consigna">
+        📌 Construye la expresión lógica del argumento, elabora la tabla de verdad de 8 filas
+        y determina a qué tipo de proposición corresponde.
+      </div>
+
+      <div class="opciones">
+        <div class="opcion">
+          <div class="opcion-letra">A</div>
+          <div class="opcion-texto">Tautología — la expresión resulta verdadera en las 8 filas de la tabla de verdad
+          </div>
+        </div>
+        <div class="opcion">
+          <div class="opcion-letra">B</div>
+          <div class="opcion-texto">Contradicción — la expresión resulta falsa en las 8 filas de la tabla de verdad
+          </div>
+        </div>
+        <div class="opcion">
+          <div class="opcion-letra">C</div>
+          <div class="opcion-texto">Contingencia — la expresión es verdadera en algunos casos y falsa en otros</div>
+        </div>
+        <div class="opcion">
+          <div class="opcion-letra">D</div>
+          <div class="opcion-texto">Equivalencia lógica — las dos partes del condicional tienen siempre el mismo valor
+          </div>
+        </div>
+      </div>
+
+      <div class="tabla-container">
+        <div class="tabla-titulo">📊 Espacio para la tabla de verdad</div>
+        <table class="verdad">
+          <thead>
+            <tr>
+              <th>p</th>
+              <th>q</th>
+              <th>r</th>
+              <th>Subexpresión 1</th>
+              <th>Subexpresión 2</th>
+              <th>Subexpresión 3</th>
+              <th>Expresión completa</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>V</td>
+              <td>V</td>
+              <td>V</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>V</td>
+              <td>V</td>
+              <td>F</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>V</td>
+              <td>F</td>
+              <td>V</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>V</td>
+              <td>F</td>
+              <td>F</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>F</td>
+              <td>V</td>
+              <td>V</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>F</td>
+              <td>V</td>
+              <td>F</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>F</td>
+              <td>F</td>
+              <td>V</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>F</td>
+              <td>F</td>
+              <td>F</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <hr class="separador">
+
+    <!-- ══════════════════════════════════════════════
+         PREGUNTA 2 — Falacia de Afirmación del Consecuente
+         Resultado esperado: CONTINGENCIA
+         Fórmula: [(p → q) ∧ q] → p
+         ═════════════════════════════════════════════════ -->
+    <div class="pregunta">
+      <div class="pregunta-header">
+        <div class="pregunta-num">2</div>
+        <span class="pregunta-puntos">2 puntos</span>
+        <span class="pregunta-tipo">Selección múltiple · Única respuesta</span>
+      </div>
+
+      <div class="caso">
+        <div class="caso-titulo">🔍 Caso — Investigación criminal</div>
+        <div class="caso-texto">
+          "El experto en ciberseguridad establece: si el sospechoso tenía acceso
+          al sistema informático, entonces es posible que haya modificado los registros.
+          El perito confirma que los registros sí fueron modificados.
+          El investigador concluye que, por lo tanto, el sospechoso tenía acceso al sistema."
+        </div>
+      </div>
+
+      <div class="glosario">
+        <div class="glosario-titulo">Glosario de proposiciones simples:</div>
+        <ul>
+          <li><span class="var">p</span> El sospechoso tenía acceso al sistema informático</li>
+          <li><span class="var">q</span> Los registros fueron modificados</li>
+        </ul>
+      </div>
+
+      <div class="consigna">
+        📌 Identifica las premisas y la conclusión del argumento, construye la expresión lógica formal,
+        elabora la tabla de verdad de 4 filas y determina el tipo de proposición.
+        Presta especial atención a la dirección de las implicaciones.
+      </div>
+
+      <div class="opciones">
+        <div class="opcion">
+          <div class="opcion-letra">A</div>
+          <div class="opcion-texto">Tautología — la expresión resulta verdadera en las 4 filas de la tabla de verdad
+          </div>
+        </div>
+        <div class="opcion">
+          <div class="opcion-letra">B</div>
+          <div class="opcion-texto">Contradicción — la expresión resulta falsa en las 4 filas de la tabla de verdad
+          </div>
+        </div>
+        <div class="opcion">
+          <div class="opcion-letra">C</div>
+          <div class="opcion-texto">Contingencia — la expresión es verdadera en algunos casos y falsa en otros</div>
+        </div>
+        <div class="opcion">
+          <div class="opcion-letra">D</div>
+          <div class="opcion-texto">Indeterminado — el argumento no puede clasificarse con tabla de verdad</div>
+        </div>
+      </div>
+
+      <div class="tabla-container">
+        <div class="tabla-titulo">📊 Espacio para la tabla de verdad</div>
+        <table class="verdad">
+          <thead>
+            <tr>
+              <th>p</th>
+              <th>q</th>
+              <th>Subexpresión 1</th>
+              <th>Subexpresión 2</th>
+              <th>Expresión completa</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>V</td>
+              <td>V</td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>V</td>
+              <td>F</td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>F</td>
+              <td>V</td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>F</td>
+              <td>F</td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <hr class="separador">
+
+    <!-- ══════════════════════════════════════════════
+         PREGUNTA 3 — Premisas mutuamente contradictorias
+         Resultado esperado: CONTRADICCIÓN
+         Fórmula: (p → q) ∧ (p → ¬q) ∧ p
+         ═════════════════════════════════════════════════ -->
+    <div class="pregunta">
+      <div class="pregunta-header">
+        <div class="pregunta-num">3</div>
+        <span class="pregunta-puntos">2 puntos</span>
+        <span class="pregunta-tipo">Selección múltiple · Única respuesta</span>
+      </div>
+
+      <div class="caso">
+        <div class="caso-titulo">📄 Caso — Auditoría laboral</div>
+        <div class="caso-texto">
+          "Una auditoría laboral concluye simultáneamente lo siguiente sobre un empleado:
+          Primero: si el empleado cumplió el horario establecido, entonces tiene derecho
+          al bono de puntualidad. Segundo: si el empleado cumplió el horario establecido,
+          entonces NO tiene derecho al bono de puntualidad. Tercero: el empleado sí cumplió
+          con el horario establecido durante el período evaluado."
+        </div>
+      </div>
+
+      <div class="glosario">
+        <div class="glosario-titulo">Glosario de proposiciones simples:</div>
+        <ul>
+          <li><span class="var">p</span> El empleado cumple con el horario establecido</li>
+          <li><span class="var">q</span> El empleado tiene derecho al bono de puntualidad</li>
+        </ul>
+      </div>
+
+      <div class="consigna">
+        📌 Identifica las tres afirmaciones del argumento, construye la expresión lógica compuesta
+        que las une mediante conjunción, elabora la tabla de verdad de 4 filas y determina el tipo.
+      </div>
+
+      <div class="opciones">
+        <div class="opcion">
+          <div class="opcion-letra">A</div>
+          <div class="opcion-texto">Tautología — la expresión resulta verdadera en las 4 filas de la tabla de verdad
+          </div>
+        </div>
+        <div class="opcion">
+          <div class="opcion-letra">B</div>
+          <div class="opcion-texto">Contradicción — la expresión resulta falsa en las 4 filas de la tabla de verdad
+          </div>
+        </div>
+        <div class="opcion">
+          <div class="opcion-letra">C</div>
+          <div class="opcion-texto">Contingencia — la expresión es verdadera en algunos casos y falsa en otros</div>
+        </div>
+        <div class="opcion">
+          <div class="opcion-letra">D</div>
+          <div class="opcion-texto">Equivalencia lógica — ambos lados del condicional tienen siempre el mismo valor
+          </div>
+        </div>
+      </div>
+
+      <div class="tabla-container">
+        <div class="tabla-titulo">📊 Espacio para la tabla de verdad</div>
+        <table class="verdad">
+          <thead>
+            <tr>
+              <th>p</th>
+              <th>q</th>
+              <th>¬q</th>
+              <th>Subexpresión 1</th>
+              <th>Subexpresión 2</th>
+              <th>Expresión completa</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>V</td>
+              <td>V</td>
+              <td>F</td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>V</td>
+              <td>F</td>
+              <td>V</td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>F</td>
+              <td>V</td>
+              <td>F</td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>F</td>
+              <td>F</td>
+              <td>V</td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <hr class="separador">
+
+    <!-- ══════════════════════════════════════════════
+         PREGUNTA 4 — Dilema Constructivo
+         Resultado esperado: TAUTOLOGÍA
+         Fórmula: [(p → r) ∧ (q → r) ∧ (p ∨ q)] → r
+         ═════════════════════════════════════════════════ -->
+    <div class="pregunta">
+      <div class="pregunta-header">
+        <div class="pregunta-num">4</div>
+        <span class="pregunta-puntos">2 puntos</span>
+        <span class="pregunta-tipo">Selección múltiple · Única respuesta</span>
+      </div>
+
+      <div class="caso">
+        <div class="caso-titulo">🏭 Caso — Control de calidad industrial</div>
+        <div class="caso-texto">
+          "El manual de control de calidad de una fábrica de dispositivos electrónicos establece:
+          Si un dispositivo presenta defecto de fabricación en sus componentes físicos,
+          entonces es rechazado en la línea de producción.
+          Si un dispositivo presenta defecto en su ensamblaje interno,
+          entonces también es rechazado en la línea de producción.
+          Tras la inspección del lote, se confirma que el dispositivo analizado
+          presenta defecto de fabricación en sus componentes físicos
+          o presenta defecto en su ensamblaje interno (o ambos).
+          Por tanto, el dispositivo fue rechazado en la línea de producción."
+        </div>
+      </div>
+
+      <div class="glosario">
+        <div class="glosario-titulo">Glosario de proposiciones simples:</div>
+        <ul>
+          <li><span class="var">p</span> El dispositivo presenta defecto en componentes físicos</li>
+          <li><span class="var">q</span> El dispositivo presenta defecto en ensamblaje interno</li>
+          <li><span class="var">r</span> El dispositivo es rechazado en la línea de producción</li>
+        </ul>
+      </div>
+
+      <div class="consigna">
+        📌 Construye la expresión lógica que representa las tres premisas y la conclusión,
+        elabora la tabla de verdad de 8 filas y determina a qué tipo de proposición corresponde el argumento.
+      </div>
+
+      <div class="opciones">
+        <div class="opcion">
+          <div class="opcion-letra">A</div>
+          <div class="opcion-texto">Tautología — la expresión resulta verdadera en las 8 filas de la tabla de verdad
+          </div>
+        </div>
+        <div class="opcion">
+          <div class="opcion-letra">B</div>
+          <div class="opcion-texto">Contradicción — la expresión resulta falsa en las 8 filas de la tabla de verdad
+          </div>
+        </div>
+        <div class="opcion">
+          <div class="opcion-letra">C</div>
+          <div class="opcion-texto">Contingencia — la expresión es verdadera en algunos casos y falsa en otros</div>
+        </div>
+        <div class="opcion">
+          <div class="opcion-letra">D</div>
+          <div class="opcion-texto">Indeterminado — con tres variables no es posible construir la tabla de verdad</div>
+        </div>
+      </div>
+
+      <div class="tabla-container">
+        <div class="tabla-titulo">📊 Espacio para la tabla de verdad</div>
+        <table class="verdad">
+          <thead>
+            <tr>
+              <th>p</th>
+              <th>q</th>
+              <th>r</th>
+              <th>Subexpresión 1</th>
+              <th>Subexpresión 2</th>
+              <th>Subexpresión 3</th>
+              <th>Expresión completa</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>V</td>
+              <td>V</td>
+              <td>V</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>V</td>
+              <td>V</td>
+              <td>F</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>V</td>
+              <td>F</td>
+              <td>V</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>V</td>
+              <td>F</td>
+              <td>F</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>F</td>
+              <td>V</td>
+              <td>V</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>F</td>
+              <td>V</td>
+              <td>F</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>F</td>
+              <td>F</td>
+              <td>V</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>F</td>
+              <td>F</td>
+              <td>F</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <hr class="separador">
+
+    <!-- ══════════════════════════════════════════════
+         PREGUNTA 5 — Razonamiento por casos
+         Resultado esperado: TAUTOLOGÍA
+         Fórmula: [(p ∨ q) ∧ (p → r)] → (q ∨ r)
+         ═════════════════════════════════════════════════ -->
+    <div class="pregunta">
+      <div class="pregunta-header">
+        <div class="pregunta-num">5</div>
+        <span class="pregunta-puntos">2 puntos</span>
+        <span class="pregunta-tipo">Selección múltiple · Única respuesta</span>
+      </div>
+
+      <div class="caso">
+        <div class="caso-titulo">🏥 Caso — Diagnóstico médico</div>
+        <div class="caso-texto">
+          "En el protocolo de diagnóstico de un centro médico se establece:
+          El paciente presenta síntomas de gripe o síntomas de alergia respiratoria.
+          Si el paciente presenta síntomas de gripe, entonces se le prescribe tratamiento antiviral.
+          Se requiere determinar: ¿es siempre cierto que el paciente recibirá tratamiento antiviral
+          o presentará síntomas de alergia respiratoria (o ambas condiciones)?"
+        </div>
+      </div>
+
+      <div class="glosario">
+        <div class="glosario-titulo">Glosario de proposiciones simples:</div>
+        <ul>
+          <li><span class="var">p</span> El paciente presenta síntomas de gripe</li>
+          <li><span class="var">q</span> El paciente presenta síntomas de alergia respiratoria</li>
+          <li><span class="var">r</span> El paciente recibe tratamiento antiviral</li>
+        </ul>
+      </div>
+
+      <div class="consigna">
+        📌 Traduce las dos premisas y la pregunta del enunciado a sus expresiones lógicas,
+        forma el argumento completo, construye la tabla de verdad de 8 filas y clasifica el resultado.
+        ⚠️ No asumas el resultado sin completar todas las filas — algunas filas pueden sorprenderte.
+      </div>
+
+      <div class="opciones">
+        <div class="opcion">
+          <div class="opcion-letra">A</div>
+          <div class="opcion-texto">Tautología — la expresión resulta verdadera en las 8 filas de la tabla de verdad
+          </div>
+        </div>
+        <div class="opcion">
+          <div class="opcion-letra">B</div>
+          <div class="opcion-texto">Contradicción — la expresión resulta falsa en las 8 filas de la tabla de verdad
+          </div>
+        </div>
+        <div class="opcion">
+          <div class="opcion-letra">C</div>
+          <div class="opcion-texto">Contingencia — la expresión es verdadera en algunos casos y falsa en otros</div>
+        </div>
+        <div class="opcion">
+          <div class="opcion-letra">D</div>
+          <div class="opcion-texto">Equivalencia lógica — ambos lados del condicional tienen siempre el mismo valor
+          </div>
+        </div>
+      </div>
+
+      <div class="tabla-container">
+        <div class="tabla-titulo">📊 Espacio para la tabla de verdad</div>
+        <table class="verdad">
+          <thead>
+            <tr>
+              <th>p</th>
+              <th>q</th>
+              <th>r</th>
+              <th>Subexpresión 1</th>
+              <th>Subexpresión 2</th>
+              <th>Subexpresión 3</th>
+              <th>Expresión completa</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>V</td>
+              <td>V</td>
+              <td>V</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>V</td>
+              <td>V</td>
+              <td>F</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>V</td>
+              <td>F</td>
+              <td>V</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>V</td>
+              <td>F</td>
+              <td>F</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>F</td>
+              <td>V</td>
+              <td>V</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>F</td>
+              <td>V</td>
+              <td>F</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>F</td>
+              <td>F</td>
+              <td>V</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>F</td>
+              <td>F</td>
+              <td>F</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /preguntas -->
+
+  <!-- PIE DE PÁGINA -->
+  <div class="footer">
+    <div><strong>Universidad de Córdoba</strong> · Fac. de Educación · Lic. en Educación Infantil · Razonamiento Lógico
+      · 2026-I</div>
+    <div>Puntaje total: _____ / 10 &nbsp;|&nbsp; Nota definitiva: _____</div>
+  </div>
+
+</body>
+
+</html>

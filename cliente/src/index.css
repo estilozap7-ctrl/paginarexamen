@@ -1,0 +1,167 @@
+/* Google Fonts — debe ir ANTES de las directivas @tailwind */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== BASE ===== */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-unicordoba-dark text-white font-sans antialiased;
+    background-image: 
+      radial-gradient(ellipse at 20% 50%, rgba(38, 146, 76, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(5, 63, 103, 0.06) 0%, transparent 50%);
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-unicordoba-dark;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-unicordoba-primary rounded-full;
+  }
+}
+
+/* ===== COMPONENTS ===== */
+@layer components {
+
+  /* --- Botones --- */
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-6 py-3 bg-unicordoba-primary text-white font-semibold rounded-xl 
+           hover:bg-unicordoba-primary-dark transition-all duration-300 
+           shadow-green-glow hover:shadow-green-glow-lg hover:-translate-y-0.5
+           active:translate-y-0 active:shadow-none;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center gap-2 px-6 py-3 border-2 border-unicordoba-primary text-unicordoba-primary 
+           font-semibold rounded-xl hover:bg-unicordoba-primary hover:text-white 
+           transition-all duration-300 hover:-translate-y-0.5;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 px-4 py-2 text-unicordoba-primary-300 
+           hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200;
+  }
+
+  /* --- Cards --- */
+  .card {
+    @apply bg-white/5 border border-white/10 rounded-2xl p-6 
+           shadow-card hover:shadow-card-hover hover:border-unicordoba-primary/30
+           transition-all duration-300 hover:-translate-y-1 backdrop-blur-sm;
+  }
+
+  .card-solid {
+    @apply bg-unicordoba-dark border border-unicordoba-primary/20 rounded-2xl p-6 
+           shadow-card hover:shadow-card-hover transition-all duration-300;
+  }
+
+  .card-gradient {
+    @apply relative overflow-hidden rounded-2xl p-6 text-white;
+    background: linear-gradient(135deg, #26924C 0%, #1a6536 100%);
+  }
+
+  /* --- Badge --- */
+  .badge {
+    @apply inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold;
+  }
+
+  .badge-green {
+    @apply badge bg-unicordoba-primary/20 text-unicordoba-primary-300 border border-unicordoba-primary/30;
+  }
+
+  .badge-blue {
+    @apply badge bg-unicordoba-secondary/20 text-blue-300 border border-unicordoba-secondary/30;
+  }
+
+  /* --- Inputs --- */
+  .input-field {
+    @apply w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white 
+           placeholder:text-white/40 focus:outline-none focus:border-unicordoba-primary 
+           focus:bg-white/10 focus:ring-2 focus:ring-unicordoba-primary/20 
+           transition-all duration-200;
+  }
+
+  /* --- Navbar --- */
+  .navbar {
+    @apply fixed top-0 left-0 right-0 z-50 
+           bg-unicordoba-dark/80 backdrop-blur-xl border-b border-white/10;
+  }
+
+  /* --- Section --- */
+  .section {
+    @apply py-16 px-4 md:px-8 max-w-7xl mx-auto;
+  }
+
+  .section-title {
+    @apply text-3xl md:text-4xl font-display font-bold text-white mb-2;
+  }
+
+  .section-subtitle {
+    @apply text-unicordoba-primary-300 font-medium mb-12 text-lg;
+  }
+
+  /* --- Divider verde --- */
+  .divider-green {
+    @apply w-16 h-1 bg-unicordoba-primary rounded-full mb-4;
+  }
+
+  /* --- Stat card --- */
+  .stat-card {
+    @apply card text-center;
+  }
+
+  .stat-number {
+    @apply text-4xl font-display font-black text-unicordoba-primary-400;
+  }
+
+  .stat-label {
+    @apply text-white/60 text-sm mt-1;
+  }
+
+  /* --- Glass panel --- */
+  .glass {
+    @apply bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl;
+  }
+}
+
+/* ===== UTILITIES ===== */
+@layer utilities {
+  .text-gradient-green {
+    background: linear-gradient(135deg, #33b860, #26924C, #1a6536);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .border-glow-green {
+    box-shadow: 0 0 0 1px rgba(38, 146, 76, 0.5), 0 0 20px rgba(38, 146, 76, 0.2);
+  }
+
+  .hero-mesh {
+    background-image: 
+      radial-gradient(at 40% 20%, rgba(38, 146, 76, 0.15) 0px, transparent 50%),
+      radial-gradient(at 80% 0%, rgba(5, 63, 103, 0.1) 0px, transparent 50%),
+      radial-gradient(at 0% 50%, rgba(38, 146, 76, 0.1) 0px, transparent 50%),
+      radial-gradient(at 80% 50%, rgba(38, 146, 76, 0.05) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, rgba(5, 63, 103, 0.1) 0px, transparent 50%);
+  }
+}
