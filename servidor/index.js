@@ -266,6 +266,56 @@ app.put('/api/admin/courses/:id', authenticate, isAdmin, async (req, res) => {
     }
 });
 
+app.delete('/api/admin/courses/:id', authenticate, isAdmin, async (req, res) => {
+    console.log(`🗑️ Intentando eliminar curso ID: ${req.params.id}`);
+    try {
+        const { id } = req.params;
+        const course = await Course.findByPk(id);
+        
+        if (!course) {
+            console.warn(`❌ Curso no encontrado con ID: ${id}`);
+            return res.status(404).json({ message: 'Curso no encontrado' });
+        }
+
+        // 1. Obtener todos los exámenes del curso
+        const exams = await Exam.findAll({ where: { course_id: id } });
+        const examIds = exams.map(e => e.id);
+
+        if (examIds.length > 0) {
+            // 2. Obtener intentos de esos exámenes
+            const attempts = await StudentExamAttempt.findAll({ where: { exam_id: examIds } });
+            const attemptIds = attempts.map(a => a.id);
+
+            // 3. Eliminar respuestas de esos intentos
+            if (attemptIds.length > 0) {
+                await StudentAnswer.destroy({ where: { attempt_id: attemptIds } });
+            }
+
+            // 4. Eliminar intentos y preguntas
+            await StudentExamAttempt.destroy({ where: { exam_id: examIds } });
+            await Question.destroy({ where: { exam_id: examIds } });
+        }
+
+        // 5. Eliminar exámenes
+        await Exam.destroy({ where: { course_id: id } });
+
+        // 6. Eliminar inscripciones
+        await Enrollment.destroy({ where: { course_id: id } });
+
+        // 7. Finalmente eliminar el curso
+        await course.destroy();
+
+        console.log(`✅ Curso ${id} eliminado con éxito`);
+        res.json({ message: 'Curso y todos sus datos asociados eliminados con éxito' });
+    } catch (error) {
+        console.error('❌ Error fatal al eliminar curso:', error);
+        res.status(500).json({ 
+            message: 'Error al eliminar el curso',
+            error: error.message 
+        });
+    }
+});
+
 app.get('/api/admin/instructors', authenticate, isAdmin, async (req, res) => {
     try {
         const instructors = await User.findAll({
