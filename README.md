@@ -86,4 +86,6 @@ erDiagram
 3. **Frontend:**
    - `cd cliente`
    - `npm install`
-   - `npm run dev`
+---
+
+© 2026 UniCórdoba - Sistema de Evaluación de Razonamiento Lógico. Todos los derechos reservados.

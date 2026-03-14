@@ -125,7 +125,7 @@ export default function App() {
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </main>
-        {!isAuthenticated && <Footer />}
+        <Footer />
       </div>
     </Router>
   );
