@@ -44,16 +44,24 @@ Este proyecto es una plataforma web integral diseñada para la gestión y realiz
 ## 📐 Modelos de Datos
 
 ### Modelo Entidad-Relación (ER)
-El sistema se basa en las siguientes entidades principales:
-- **User:** Información de perfiles (Admin, Docente, Estudiante).
-- **Role:** Definición de permisos.
-- **Semester:** Periodos académicos.
-- **Course:** Asignaturas vinculadas a un docente y un semestre.
-- **Exam:** Evaluaciones asociadas a un curso.
-- **Question:** Preguntas individuales dentro de un examen.
-- **Answer:** Opciones de respuesta para las preguntas (donde aplique).
-- **StudentExamAttempt:** Registro de cada vez que un estudiante inicia un examen.
-- **StudentAnswer:** Respuestas específicas dadas por el estudiante en un intento.
+A continuación se presenta la representación gráfica de las entidades y sus relaciones:
+
+```mermaid
+erDiagram
+    ROLE ||--o{ USER : "define"
+    USER ||--o{ COURSE : "administra (docente)"
+    SEMESTER ||--o{ COURSE : "pertenece"
+    USER ||--o{ ENROLLMENT : "se inscribe (estudiante)"
+    COURSE ||--o{ ENROLLMENT : "recibe"
+    COURSE ||--o{ EXAM : "contiene"
+    EXAM ||--o{ QUESTION : "tiene"
+    QUESTION ||--o{ ANSWER : "posee opciones"
+    USER ||--o{ STUDENT_EXAM_ATTEMPT : "realiza (estudiante)"
+    EXAM ||--o{ STUDENT_EXAM_ATTEMPT : "registra"
+    STUDENT_EXAM_ATTEMPT ||--o{ STUDENT_ANSWER : "contiene"
+    QUESTION ||--o{ STUDENT_ANSWER : "responde"
+    ANSWER ||--o| STUDENT_ANSWER : "es seleccionada"
+```
 
 ### Modelo Relacional (Estructura de Tablas)
 - `users` (id, full_name, email, cc, password, role_id, ...)
