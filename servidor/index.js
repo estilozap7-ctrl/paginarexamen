@@ -675,19 +675,46 @@ app.get('/api/admin/students', authenticate, isTeacher, async (req, res) => {
     }
 });
 
-// Asignar estudiante a un curso
+// Asignar estudiante(s) a un curso
 app.post('/api/teacher/courses/:courseId/students', authenticate, isTeacher, async (req, res) => {
     try {
-        const { student_id } = req.body;
+        const { student_id, student_ids } = req.body;
         const course_id = req.params.courseId;
         
-        // Verificar si ya está inscrito
-        const existing = await Enrollment.findOne({ where: { student_id, course_id } });
-        if (existing) return res.status(400).json({ message: 'El estudiante ya está inscrito en este curso' });
+        // Normalizar a un array de IDs
+        const idsToEnroll = Array.isArray(student_ids) ? student_ids : (student_id ? [student_id] : []);
+        
+        if (idsToEnroll.length === 0) {
+            return res.status(400).json({ message: 'No se proporcionaron IDs de estudiantes' });
+        }
 
-        const id = crypto.randomUUID().replace(/-/g, '');
-        await Enrollment.create({ id, student_id, course_id });
-        res.status(201).json({ message: 'Estudiante asignado con éxito' });
+        const results = {
+            enrolled: [],
+            alreadyEnrolled: [],
+            errors: []
+        };
+
+        for (const sId of idsToEnroll) {
+            try {
+                // Verificar si ya está inscrito
+                const existing = await Enrollment.findOne({ where: { student_id: sId, course_id } });
+                if (existing) {
+                    results.alreadyEnrolled.push(sId);
+                    continue;
+                }
+
+                const enrollmentId = crypto.randomUUID().replace(/-/g, '');
+                await Enrollment.create({ id: enrollmentId, student_id: sId, course_id });
+                results.enrolled.push(sId);
+            } catch (err) {
+                results.errors.push({ id: sId, error: err.message });
+            }
+        }
+
+        res.status(201).json({ 
+            message: `Proceso completado: ${results.enrolled.length} matriculados, ${results.alreadyEnrolled.length} ya existentes.`,
+            results 
+        });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

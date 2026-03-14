@@ -22,6 +22,7 @@ export default function CourseStudentManagement() {
   const [searchTerm, setSearchTerm] = useState('');
   const [studentSearch, setStudentSearch] = useState('');
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
+  const [selectedStudentIds, setSelectedStudentIds] = useState([]);
 
   useEffect(() => {
     fetchData();
@@ -48,17 +49,37 @@ export default function CourseStudentManagement() {
     }
   };
 
-  const handleAssign = async (studentId) => {
+  const handleAssign = async (studentId = null) => {
     try {
       const headers = { 'x-user-id': user.id, 'x-user-role': user.role };
+      const ids = studentId ? [studentId] : selectedStudentIds;
+      
+      if (ids.length === 0) return;
+
       await axios.post(`${API_URL}/teacher/courses/${courseId}/students`, 
-        { student_id: studentId }, 
+        { student_ids: ids }, 
         { headers }
       );
+      
       fetchData();
       setIsAssignModalOpen(false);
+      setSelectedStudentIds([]);
     } catch (err) {
-      alert(err.response?.data?.message || "Error al asignar estudiante");
+      alert(err.response?.data?.message || "Error al asignar estudiantes");
+    }
+  };
+
+  const toggleStudentSelection = (id) => {
+    setSelectedStudentIds(prev => 
+      prev.includes(id) ? prev.filter(sId => sId !== id) : [...prev, id]
+    );
+  };
+
+  const selectAllAvailable = () => {
+    if (selectedStudentIds.length === availableStudents.length) {
+      setSelectedStudentIds([]);
+    } else {
+      setSelectedStudentIds(availableStudents.map(s => s.id));
     }
   };
 
@@ -226,8 +247,8 @@ export default function CourseStudentManagement() {
           <div className="relative glass w-full max-w-xl max-h-[80vh] flex flex-col overflow-hidden animate-slide-up">
              <div className="p-6 border-b border-white/10 flex justify-between items-center bg-white/5">
                 <div>
-                  <h2 className="text-xl font-bold">Asignar <span className="text-unicordoba-primary">Estudiante</span></h2>
-                  <p className="text-xs text-white/40 mt-1">Busca en el padrón institucional de alumnos</p>
+                  <h2 className="text-xl font-bold">Asignar <span className="text-unicordoba-primary">Estudiantes</span></h2>
+                  <p className="text-xs text-white/40 mt-1">Selecciona uno o varios alumnos para matricular</p>
                 </div>
                 <button onClick={() => setIsAssignModalOpen(false)} className="text-white/40 hover:text-white transition-colors">
                   <X size={24} />
@@ -246,38 +267,88 @@ export default function CourseStudentManagement() {
                     autoFocus
                   />
                 </div>
+
+                {availableStudents.length > 0 && (
+                  <div className="mt-4 flex items-center justify-between">
+                    <label className="flex items-center gap-3 cursor-pointer group">
+                      <div 
+                        onClick={selectAllAvailable}
+                        className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
+                          selectedStudentIds.length === availableStudents.length && availableStudents.length > 0
+                          ? 'bg-unicordoba-primary border-unicordoba-primary' 
+                          : 'border-white/20 group-hover:border-white/40'
+                        }`}
+                      >
+                        {selectedStudentIds.length === availableStudents.length && availableStudents.length > 0 && <Check size={14} className="text-white" />}
+                      </div>
+                      <span className="text-xs font-bold text-white/60">Seleccionar Todos ({availableStudents.length})</span>
+                    </label>
+                    <span className="text-[10px] uppercase font-bold text-unicordoba-primary tracking-widest">
+                      {selectedStudentIds.length} seleccionados
+                    </span>
+                  </div>
+                )}
              </div>
 
              <div className="flex-grow overflow-y-auto p-2">
                 {availableStudents.length > 0 ? (
-                  availableStudents.map(student => (
-                    <div 
-                      key={student.id} 
-                      className="flex items-center justify-between p-4 hover:bg-white/5 rounded-xl transition-colors group"
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-white/10 to-transparent flex items-center justify-center text-xs font-bold border border-white/10">
-                          {student.full_name[0]}
-                        </div>
-                        <div>
-                          <p className="text-sm font-bold">{student.full_name}</p>
-                          <p className="text-xs text-white/40">CC: {student.cc} · {student.email}</p>
-                        </div>
-                      </div>
-                      <button 
-                        onClick={() => handleAssign(student.id)}
-                        className="flex items-center gap-2 bg-unicordoba-primary/10 text-unicordoba-primary group-hover:bg-unicordoba-primary group-hover:text-white px-4 py-2 rounded-lg text-xs font-bold transition-all"
+                  <div className="space-y-1">
+                    {availableStudents.map(student => (
+                      <div 
+                        key={student.id} 
+                        onClick={() => toggleStudentSelection(student.id)}
+                        className={`flex items-center justify-between p-4 rounded-xl transition-all cursor-pointer group ${
+                          selectedStudentIds.includes(student.id) 
+                          ? 'bg-unicordoba-primary/10 border border-unicordoba-primary/20' 
+                          : 'hover:bg-white/5 border border-transparent'
+                        }`}
                       >
-                        Matricular
-                      </button>
-                    </div>
-                  ))
+                        <div className="flex items-center gap-4">
+                          <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
+                            selectedStudentIds.includes(student.id)
+                            ? 'bg-unicordoba-primary border-unicordoba-primary' 
+                            : 'border-white/10 group-hover:border-white/20'
+                          }`}>
+                            {selectedStudentIds.includes(student.id) && <Check size={14} className="text-white" />}
+                          </div>
+                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-white/10 to-transparent flex items-center justify-center text-xs font-bold border border-white/10">
+                            {student.full_name[0]}
+                          </div>
+                          <div>
+                            <p className="text-sm font-bold">{student.full_name}</p>
+                            <p className="text-xs text-white/40">CC: {student.cc} · {student.email}</p>
+                          </div>
+                        </div>
+                        <Check size={16} className={`text-unicordoba-primary transition-opacity ${selectedStudentIds.includes(student.id) ? 'opacity-100' : 'opacity-0'}`} />
+                      </div>
+                    ))}
+                  </div>
                 ) : (
                   <div className="p-10 text-center opacity-40">
                     <Info size={32} className="mx-auto mb-3" />
                     <p className="text-sm">No se encontraron estudiantes disponibles.</p>
                   </div>
                 )}
+             </div>
+
+             <div className="p-6 border-t border-white/10 bg-white/5 flex gap-4">
+                <button 
+                  onClick={() => setIsAssignModalOpen(false)}
+                  className="flex-1 py-3 border border-white/10 rounded-xl font-bold hover:bg-white/5 transition-all text-xs"
+                >
+                  CANCELAR
+                </button>
+                <button 
+                  disabled={selectedStudentIds.length === 0}
+                  onClick={() => handleAssign()}
+                  className={`flex-1 py-3 rounded-xl font-bold transition-all shadow-lg text-xs ${
+                    selectedStudentIds.length > 0
+                    ? 'bg-unicordoba-primary hover:bg-unicordoba-primary-dark text-white shadow-unicordoba-primary/20'
+                    : 'bg-white/5 text-white/20 cursor-not-allowed border border-white/5 shadow-none'
+                  }`}
+                >
+                  MATRICULAR {selectedStudentIds.length > 0 ? `(${selectedStudentIds.length})` : ''}
+                </button>
              </div>
           </div>
         </div>
