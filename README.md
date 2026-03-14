@@ -30,16 +30,21 @@ Este proyecto es una plataforma web integral diseñada para la gestión y realiz
 ## 🛠️ Tecnologías Utilizadas
 
 ### Frontend
-- **React (Vite):** Framework moderno para la interfaz de usuario.
-- **CSS3 Personalizado:** Diseño "Glassmorphism" premium, oscuro y dinámico.
-- **Lucide-React:** Set de iconos vectoriales.
-- **Axios:** Cliente HTTP para comunicación con la API.
+- **React (Vite):** Biblioteca principal para la interfaz de usuario.
+- **Redux & React-Redux:** Gestión del estado global (Autenticación y persistencia).
+- **React Router Dom:** Enrutamiento dinámico y protección de rutas.
+- **Axios:** Cliente para consumo de la API REST.
+- **Lucide-React:** Set de iconos premium y minimalistas.
+- **CSS3 (Custom):** Estilos avanzados con efectos de Glassmorphism, degradados dinámicos y diseño responsivo.
 
 ### Backend
-- **Node.js & Express:** Entorno de ejecución y servidor web.
-- **Sequelize ORM:** Manejo de la base de datos mediante modelos de objetos.
-- **MySQL:** Base de datos relacional para persistencia de datos.
-- **JWT (JSON Web Tokens):** Autenticación y autorización segura.
+- **Node.js & Express.js:** Motor de ejecución y framework de servidor.
+- **Sequelize ORM:** Mapeo objeto-relacional para transacciones seguras con la base de datos.
+- **MySQL (AlwaysData):** Motor de base de datos relacional para almacenamiento persistente.
+- **JWT (JSON Web Tokens):** Sistema de autenticación e intercambio de información segura.
+- **Bcryptjs:** Encriptación de contraseñas de usuarios.
+- **Dotenv:** Gestión de variables de entorno seguras.
+- **CORS:** Configuración de seguridad para el acceso cruzado al servidor.
 
 ## 📐 Modelos de Datos
 
