@@ -1,4 +1,4 @@
-# Sistema de Evaluación de Razonamiento Lógico - UniCórdoba
+# Sistema de Evaluación de Razonamiento Lógico - estilozap7-ctrl
 
 Este proyecto es una plataforma web integral diseñada para la gestión y realización de evaluaciones académicas, con un enfoque particular en el razonamiento lógico. Permite a docentes administrar cursos y exámenes, y a estudiantes realizar pruebas con diversos tipos de preguntas y obtener resultados detallados.
 
@@ -88,4 +88,4 @@ erDiagram
    - `npm install`
 ---
 
-© 2026 UniCórdoba - Sistema de Evaluación de Razonamiento Lógico. Todos los derechos reservados.
+© 2026 estilozap7-ctrl - Sistema de Evaluación de Razonamiento Lógico. Todos los derechos reservados.
