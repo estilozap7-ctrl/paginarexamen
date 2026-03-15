@@ -82,6 +82,18 @@ export default function TeacherExamManagement() {
     }
   };
 
+  const handleDeleteExam = async (exam) => {
+    if (!confirm(`¿Estás seguro de que deseas eliminar el examen "${exam.title}"?\nSe borrarán todas sus preguntas e intentos de los estudiantes. Esta acción no se puede deshacer.`)) return;
+    try {
+      await axios.delete(`${API_URL}/teacher/exams/${exam.id}`, {
+        headers: { 'x-user-id': user.id, 'x-user-role': user.role }
+      });
+      fetchExams();
+    } catch (err) {
+      alert('Error al eliminar el examen: ' + (err.response?.data?.message || err.message));
+    }
+  };
+
   const openExamModal = (exam = null) => {
     if (exam) {
       // Format date for input type="date" (YYYY-MM-DD)
@@ -353,13 +365,20 @@ export default function TeacherExamManagement() {
                       onClick={(e) => { e.stopPropagation(); openExamModal(exam); }}
                       className="flex-1 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors text-white"
                     >
-                      <Edit2 size={12} /> Editar Fecha
+                      <Edit2 size={12} /> Editar
                     </button>
                     <button 
                       onClick={(e) => { e.stopPropagation(); fetchExamAttempts(exam); setActiveTab('results'); }}
-                      className="flex-1 py-2 bg-unicordoba-primary/10 hover:bg-unicordoba-primary/20 text-unicordoba-primary rounded-lg text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors font-bold"
+                      className="flex-1 py-2 bg-unicordoba-primary/10 hover:bg-unicordoba-primary/20 text-unicordoba-primary rounded-lg text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors"
                     >
                       <Users size={12} /> Resultados
+                    </button>
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); handleDeleteExam(exam); }}
+                      className="py-2 px-3 bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white rounded-lg text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1 transition-all"
+                      title="Eliminar examen"
+                    >
+                      <Trash2 size={12} />
                     </button>
                   </div>
                 </div>

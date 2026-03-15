@@ -861,6 +861,53 @@ app.put('/api/teacher/exams/:examId', authenticate, isTeacher, async (req, res) 
     }
 });
 
+// Eliminar un examen (el docente puede descartarlo si aún no es relevante)
+app.delete('/api/teacher/exams/:examId', authenticate, isTeacher, async (req, res) => {
+    try {
+        const { examId } = req.params;
+
+        // 1. Verificar que el examen existe
+        const exam = await Exam.findByPk(examId, {
+            include: [{ model: Course }]
+        });
+        if (!exam) return res.status(404).json({ message: 'Examen no encontrado' });
+
+        // 2. Verificar que el docente es dueño del curso (o es ADMIN)
+        const role = String(req.user.role).toUpperCase();
+        if (role !== 'ADMIN' && exam.Course?.course_admin_id !== req.user.id) {
+            return res.status(403).json({ message: 'No tienes permiso para eliminar este examen.' });
+        }
+
+        // 3. Obtener todos los intentos de este examen
+        const attempts = await StudentExamAttempt.findAll({ where: { exam_id: examId } });
+        const attemptIds = attempts.map(a => a.id);
+
+        // 4. Eliminar respuestas de los estudiantes
+        if (attemptIds.length > 0) {
+            await sequelize.query(
+                'DELETE FROM student_answers WHERE attempt_id IN (?)',
+                { replacements: [attemptIds] }
+            );
+        }
+
+        // 5. Eliminar intentos de los estudiantes
+        await StudentExamAttempt.destroy({ where: { exam_id: examId } });
+
+        // 6. Eliminar preguntas del examen
+        await Question.destroy({ where: { exam_id: examId } });
+
+        // 7. Eliminar el examen
+        await exam.destroy();
+
+        console.log(`🗑️ Examen ${examId} eliminado por docente ${req.user.id}`);
+        res.json({ message: 'Examen eliminado correctamente junto con sus preguntas e intentos.' });
+
+    } catch (error) {
+        console.error('❌ Error al eliminar examen:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
 app.post('/api/teacher/exams/:examId/questions', authenticate, isTeacher, async (req, res) => {
     try {
         const { body, type, points, options } = req.body;
