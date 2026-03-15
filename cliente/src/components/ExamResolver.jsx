@@ -5,8 +5,9 @@ import axios from 'axios';
 import { 
   Timer, ChevronLeft, ChevronRight, Save, 
   Send, AlertCircle, CheckCircle2, List, 
-  Clock, Award, Info, BookOpen
+  Clock, Award, Info, BookOpen, Type
 } from 'lucide-react';
+import SymbolPicker from './SymbolPicker';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
@@ -138,6 +139,11 @@ export default function ExamResolver() {
     const min = Math.floor(seconds / 60);
     const sec = seconds % 60;
     return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+  };
+
+  const insertSymbol = (qId, symbol) => {
+    const currentVal = answers[qId] || '';
+    handleSaveAnswer(qId, currentVal + symbol);
   };
 
   if (loading) return (
@@ -395,12 +401,17 @@ export default function ExamResolver() {
                 )}
 
                 {currentQ.type === 'TEXT_DEVELOPMENT' && (
-                  <textarea 
-                    className="w-full h-64 bg-black/40 border border-white/10 rounded-2xl p-6 focus:border-unicordoba-primary outline-none text-white leading-relaxed resize-none"
-                    placeholder="Escribe tu respuesta aquí..."
-                    value={answers[currentQ.id] || ''}
-                    onChange={(e) => handleSaveAnswer(currentQ.id, e.target.value)}
-                  />
+                  <div className="space-y-4">
+                    <div className="flex justify-end">
+                      <SymbolPicker onSelect={(s) => insertSymbol(currentQ.id, s)} />
+                    </div>
+                    <textarea 
+                      className="w-full h-64 bg-black/40 border border-white/10 rounded-2xl p-6 focus:border-unicordoba-primary outline-none text-white leading-relaxed resize-none"
+                      placeholder="Escribe tu respuesta aquí..."
+                      value={answers[currentQ.id] || ''}
+                      onChange={(e) => handleSaveAnswer(currentQ.id, e.target.value)}
+                    />
+                  </div>
                 )}
 
                 {currentQ.type === 'MATCHING' && (

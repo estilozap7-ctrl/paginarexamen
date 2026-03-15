@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { ArrowLeft, Plus, Edit2, Trash2, Save, FileText, Settings, X, CheckSquare, List, AlignLeft, Shuffle, Users, RotateCcw, Eye, CheckCircle2, AlertCircle, Award } from 'lucide-react';
+import { ArrowLeft, Plus, Edit2, Trash2, Save, FileText, Settings, X, CheckSquare, List, AlignLeft, Shuffle, Users, RotateCcw, Eye, CheckCircle2, AlertCircle, Award, Type } from 'lucide-react';
 import axios from 'axios';
+import SymbolPicker from './SymbolPicker';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
@@ -266,6 +267,19 @@ export default function TeacherExamManagement() {
   const handleTypeChange = (e) => {
     const newType = e.target.value;
     setQForm({ ...qForm, type: newType, options: [] });
+  };
+
+  const insertAtCursor = (symbol, field, isOption = false, optIdx = null, optField = null) => {
+    if (isOption) {
+      const newOptions = [...qForm.options];
+      const currentVal = newOptions[optIdx][optField] || '';
+      // Simplified: append if we don't have refs for all dynamic inputs
+      newOptions[optIdx][optField] = currentVal + symbol;
+      setQForm({ ...qForm, options: newOptions });
+    } else {
+      const currentVal = qForm[field] || '';
+      setQForm({ ...qForm, [field]: currentVal + symbol });
+    }
   };
 
   if (loading) return <div className="p-8 text-white">Cargando...</div>;
@@ -589,7 +603,10 @@ export default function TeacherExamManagement() {
 
                 {/* Enunciado */}
                 <div>
-                  <label className="text-xs font-bold uppercase tracking-widest text-white/40 mb-2 block ml-1">Enunciado de la pregunta</label>
+                  <div className="flex justify-between items-center mb-2">
+                    <label className="text-xs font-bold uppercase tracking-widest text-white/40 block ml-1">Enunciado de la pregunta</label>
+                    <SymbolPicker onSelect={(s) => insertAtCursor(s, 'body')} />
+                  </div>
                   <textarea required rows="4" value={qForm.body} onChange={e=>setQForm({...qForm, body: e.target.value})} className="w-full bg-black/30 border border-white/10 rounded-xl p-4 focus:border-unicordoba-primary outline-none transition-all resize-none text-lg leading-relaxed" placeholder="Escribe el enunciado aquí... Puedes agregar código, escenarios, etc."></textarea>
                 </div>
 
@@ -635,10 +652,13 @@ export default function TeacherExamManagement() {
                                     className="w-5 h-5 accent-unicordoba-primary" 
                                   />
                                 </div>
-                                <div className="flex-grow">
-                                  <input placeholder={`Opción ${idx+1}`} value={opt.text || ''} onChange={(e) => updateOption(idx, 'text', e.target.value)} required className={`w-full bg-black/30 border ${opt.isCorrect ? 'border-unicordoba-primary/50 bg-unicordoba-primary/5' : 'border-white/10'} rounded-xl p-3 focus:border-unicordoba-primary outline-none text-sm transition-all`} />
-                                  {opt.isCorrect && <span className="text-[10px] uppercase font-bold text-unicordoba-primary ml-1 block mt-1">Respuesta Correcta</span>}
-                                </div>
+                                  <div className="flex-grow">
+                                    <div className="flex gap-2">
+                                      <input placeholder={`Opción ${idx+1}`} value={opt.text || ''} onChange={(e) => updateOption(idx, 'text', e.target.value)} required className={`w-full bg-black/30 border ${opt.isCorrect ? 'border-unicordoba-primary/50 bg-unicordoba-primary/5' : 'border-white/10'} rounded-xl p-3 focus:border-unicordoba-primary outline-none text-sm transition-all`} />
+                                      <SymbolPicker onSelect={(s) => insertAtCursor(s, 'options', true, idx, 'text')} />
+                                    </div>
+                                    {opt.isCorrect && <span className="text-[10px] uppercase font-bold text-unicordoba-primary ml-1 block mt-1">Respuesta Correcta</span>}
+                                  </div>
                               </>
                             )}
                             <button type="button" onClick={() => removeOption(idx)} className="p-3 text-red-400 hover:bg-red-500/20 rounded-xl transition-colors"><Trash2 size={16}/></button>
