@@ -31,6 +31,10 @@ const StudentExamAttempt = sequelize.define('StudentExamAttempt', {
   status: {
     type: DataTypes.ENUM('IN_PROGRESS', 'COMPLETED', 'EXPIRED'),
     defaultValue: 'IN_PROGRESS'
+  },
+  question_order: {
+    type: DataTypes.TEXT,
+    allowNull: true // Stores JSON string of selected question IDs
   }
 }, {
   tableName: 'student_exam_attempts',

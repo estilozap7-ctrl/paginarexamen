@@ -5,7 +5,7 @@ import axios from 'axios';
 import { 
   ChevronLeft, Timer, FileText, CheckCircle2, 
   AlertCircle, PlayCircle, Lock, Award,
-  Clock, Calendar, RotateCcw
+  Clock, Calendar, RotateCcw, Shuffle
 } from 'lucide-react';
 import UnicordobaLogo from './UnicordobaLogo';
 
@@ -159,6 +159,15 @@ export default function ExamList() {
                                 <Calendar size={14} />
                                 <span>{new Date(exam.activity_date).toLocaleDateString()}</span>
                             </div>
+                            {exam.questions_limit > 0 && (
+                              <>
+                                <div className="h-1 w-1 bg-white/10 rounded-full"></div>
+                                <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-md bg-unicordoba-primary/10 text-unicordoba-primary border border-unicordoba-primary/20">
+                                  <Shuffle size={12} />
+                                  {exam.questions_limit} preguntas aleatorias
+                                </div>
+                              </>
+                            )}
                         </div>
                     </div>
 

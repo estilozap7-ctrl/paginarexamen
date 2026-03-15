@@ -28,7 +28,7 @@ export default function TeacherExamManagement() {
   
   // Modals state
   const [isExamModalOpen, setIsExamModalOpen] = useState(false);
-  const [examForm, setExamForm] = useState({ title: '', description: '', activity_date: '', duration_minutes: 60 });
+  const [examForm, setExamForm] = useState({ title: '', description: '', activity_date: '', duration_minutes: 60, questions_limit: 0 });
   
   const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false);
   const [qForm, setQForm] = useState({ id: null, body: '', type: 'SINGLE_CHOICE', points: 10, options: [] });
@@ -75,7 +75,7 @@ export default function TeacherExamManagement() {
         });
       }
       setIsExamModalOpen(false);
-      setExamForm({ id: null, title: '', description: '', activity_date: '', duration_minutes: 60 });
+      setExamForm({ id: null, title: '', description: '', activity_date: '', duration_minutes: 60, questions_limit: 0 });
       fetchExams();
     } catch (err) {
       alert("Error guardando examen");
@@ -91,10 +91,11 @@ export default function TeacherExamManagement() {
         title: exam.title, 
         description: exam.description, 
         activity_date: date, 
-        duration_minutes: exam.duration_minutes 
+        duration_minutes: exam.duration_minutes,
+        questions_limit: exam.questions_limit || 0
       });
     } else {
-      setExamForm({ id: null, title: '', description: '', activity_date: '', duration_minutes: 60 });
+      setExamForm({ id: null, title: '', description: '', activity_date: '', duration_minutes: 60, questions_limit: 0 });
     }
     setIsExamModalOpen(true);
   };
@@ -329,7 +330,14 @@ export default function TeacherExamManagement() {
                       <div className="w-12 h-12 bg-unicordoba-primary/10 rounded-xl flex items-center justify-center text-unicordoba-primary">
                         <FileText size={24} />
                       </div>
-                      <span className="badge-green">{exam.Questions ? exam.Questions.length : 0} Preguntas</span>
+                      <div className="flex flex-col items-end gap-1">
+                        <span className="badge-green">{exam.Questions ? exam.Questions.length : 0} en banco</span>
+                        {exam.questions_limit > 0 && (
+                          <span className="text-[10px] px-2 py-0.5 rounded bg-unicordoba-primary/10 text-unicordoba-primary border border-unicordoba-primary/20 font-bold uppercase tracking-wider flex items-center gap-1">
+                            <Shuffle size={10} /> {exam.questions_limit} aleatorias
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <h3 className="text-xl font-bold mb-2 group-hover:text-unicordoba-primary transition-colors">{exam.title}</h3>
                     <p className="text-white/40 text-sm line-clamp-2 mb-4">{exam.description}</p>
@@ -567,6 +575,11 @@ export default function TeacherExamManagement() {
                     <label className="text-xs text-white/40 font-bold uppercase mb-1 block">Duración (min)</label>
                     <input required type="number" value={examForm.duration_minutes} onChange={e=>setExamForm({...examForm, duration_minutes: e.target.value})} className="w-full bg-black/30 border border-white/10 rounded-xl p-3 focus:border-unicordoba-primary outline-none" />
                   </div>
+                </div>
+                <div>
+                  <label className="text-xs text-white/40 font-bold uppercase mb-1 block">Preguntas a mostrar (Banco Aleatorio)</label>
+                  <input type="number" value={examForm.questions_limit} onChange={e=>setExamForm({...examForm, questions_limit: e.target.value})} className="w-full bg-black/30 border border-white/10 rounded-xl p-3 focus:border-unicordoba-primary outline-none" placeholder="0 = Mostrar todas" />
+                  <p className="text-[10px] text-white/20 mt-1 italic">Si es mayor a 0, se elegirán estas preguntas al azar del banco total.</p>
                 </div>
                 <button type="submit" className="w-full py-4 mt-4 bg-unicordoba-primary text-white rounded-xl font-bold uppercase hover:bg-green-600 transition-colors">Guardar Examen</button>
              </form>

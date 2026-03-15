@@ -37,6 +37,10 @@ const Exam = sequelize.define('Exam', {
   is_published: {
     type: DataTypes.BOOLEAN,
     defaultValue: false
+  },
+  questions_limit: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0 // 0 means show all
   }
 }, {
   tableName: 'exams',

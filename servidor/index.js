@@ -468,15 +468,49 @@ app.post('/api/student/exams/:examId/start', authenticate, isStudent, async (req
                 await attempt.update({ status: 'EXPIRED', finished_at: expiresAt });
                 return res.status(403).json({ message: 'El tiempo para este examen ha expirado.', attempt });
             }
+
+            // ✅ FIX: Si este intento no tiene question_order pero el examen tiene un límite, asignarlo ahora
+            if (!attempt.question_order && exam.questions_limit > 0 && exam.Questions.length > 0) {
+                const allIds = exam.Questions.map(q => q.id);
+                for (let i = allIds.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [allIds[i], allIds[j]] = [allIds[j], allIds[i]];
+                }
+                const selectedIds = allIds.slice(0, exam.questions_limit);
+                await attempt.update({ question_order: JSON.stringify(selectedIds) });
+                // Recargar el attempt actualizado
+                attempt = await StudentExamAttempt.findByPk(attempt.id);
+            }
         } else {
-            // Crear nuevo intento
+            // Crear nuevo intento e inicializar el orden de preguntas aleatorias si aplica
+            const newAttemptId = crypto.randomUUID().replace(/-/g, '');
+            let selectedIds = null;
+
+            if (exam.questions_limit > 0 && exam.Questions.length > 0) {
+                // Shuffle all available question IDs (Fisher-Yates)
+                const allIds = exam.Questions.map(q => q.id);
+                for (let i = allIds.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [allIds[i], allIds[j]] = [allIds[j], allIds[i]];
+                }
+                selectedIds = allIds.slice(0, exam.questions_limit);
+            }
+
             attempt = await StudentExamAttempt.create({
-                id: crypto.randomUUID().replace(/-/g, ''),
+                id: newAttemptId,
                 student_id: req.user.id,
                 exam_id: examId,
                 status: 'IN_PROGRESS',
-                started_at: new Date()
+                started_at: new Date(),
+                question_order: selectedIds ? JSON.stringify(selectedIds) : null
             });
+        }
+
+        // Filtrar las preguntas si hay un orden guardado
+        if (attempt.question_order) {
+            const order = JSON.parse(attempt.question_order);
+            const orderedQuestions = order.map(id => exam.Questions.find(q => q.id === id)).filter(Boolean);
+            exam.setDataValue('Questions', orderedQuestions);
         }
 
         // Obtener respuestas ya guardadas si las hay
@@ -532,7 +566,14 @@ app.post('/api/student/exams/:examId/finish', authenticate, isStudent, async (re
 
         if (!attempt) return res.status(404).json({ message: 'Intento no encontrado o ya finalizado.' });
 
-        const questions = await Question.findAll({ where: { exam_id: examId } });
+        // Obtener SOLO las preguntas que le tocaron a este estudiante
+        let questions;
+        if (attempt.question_order) {
+            const orderedIds = JSON.parse(attempt.question_order);
+            questions = await Question.findAll({ where: { id: orderedIds } });
+        } else {
+            questions = await Question.findAll({ where: { exam_id: examId } });
+        }
         const answers = await StudentAnswer.findAll({ where: { attempt_id: attempt.id } });
         
         let totalScore = 0;
@@ -783,7 +824,7 @@ app.get('/api/teacher/exams', authenticate, isTeacher, async (req, res) => {
 
 app.post('/api/teacher/courses/:courseId/exams', authenticate, isTeacher, async (req, res) => {
     try {
-        const { title, description, activity_date, duration_minutes } = req.body;
+        const { title, description, activity_date, duration_minutes, questions_limit } = req.body;
         const id = crypto.randomUUID().replace(/-/g, '');
         const newExam = await Exam.create({
             id,
@@ -791,7 +832,8 @@ app.post('/api/teacher/courses/:courseId/exams', authenticate, isTeacher, async 
             title,
             description,
             activity_date,
-            duration_minutes: duration_minutes || 60
+            duration_minutes: duration_minutes || 60,
+            questions_limit: questions_limit || 0
         });
         res.status(201).json(newExam);
     } catch (error) {
@@ -801,7 +843,7 @@ app.post('/api/teacher/courses/:courseId/exams', authenticate, isTeacher, async 
 
 app.put('/api/teacher/exams/:examId', authenticate, isTeacher, async (req, res) => {
     try {
-        const { title, description, activity_date, duration_minutes } = req.body;
+        const { title, description, activity_date, duration_minutes, questions_limit } = req.body;
         const exam = await Exam.findByPk(req.params.examId);
         if (!exam) return res.status(404).json({ message: 'Examen no encontrado' });
 
@@ -809,7 +851,8 @@ app.put('/api/teacher/exams/:examId', authenticate, isTeacher, async (req, res) 
             title: title || exam.title,
             description: description || exam.description,
             activity_date: activity_date || exam.activity_date,
-            duration_minutes: duration_minutes || exam.duration_minutes
+            duration_minutes: duration_minutes || exam.duration_minutes,
+            questions_limit: questions_limit !== undefined ? questions_limit : exam.questions_limit
         });
 
         res.json({ message: 'Examen actualizado', exam });
