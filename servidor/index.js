@@ -16,6 +16,15 @@ const crypto = require('crypto');
 const fs = require('fs');
 require('dotenv').config();
 
+const generateId = () => {
+    try {
+        return crypto.randomUUID().replace(/-/g, '');
+    } catch (e) {
+        return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    }
+};
+
+
 const logError = (msg, err) => {
     const timestamp = new Date().toISOString();
     const errorLine = `[${timestamp}] ${msg}: ${err.message}\n${err.stack}\n\n`;
@@ -703,8 +712,9 @@ app.post('/api/teacher/courses/:courseId/students', authenticate, isTeacher, asy
                     continue;
                 }
 
-                const enrollmentId = crypto.randomUUID().replace(/-/g, '');
+                const enrollmentId = generateId();
                 await Enrollment.create({ id: enrollmentId, student_id: sId, course_id });
+
                 results.enrolled.push(sId);
             } catch (err) {
                 results.errors.push({ id: sId, error: err.message });
@@ -716,7 +726,12 @@ app.post('/api/teacher/courses/:courseId/students', authenticate, isTeacher, asy
             results 
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('❌ Error fatal al asignar estudiantes:', error);
+        res.status(500).json({ 
+            message: 'Error interno al procesar matrícluas: ' + error.message,
+            error: error.message 
+        });
+
     }
 });
 

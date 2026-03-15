@@ -49,7 +49,7 @@ export default function SymbolPicker({ onSelect, className = "" }) {
       </button>
 
       {isOpen && (
-        <div className="absolute bottom-full left-0 mb-2 w-64 glass rounded-2xl border border-white/10 shadow-2xl z-[100] animate-fade-in overflow-hidden">
+        <div className="absolute bottom-full right-0 mb-2 w-64 glass rounded-2xl border border-white/10 shadow-2xl z-[100] animate-fade-in overflow-hidden">
           <div className="flex items-center justify-between p-3 border-b border-white/5 bg-white/5">
              <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Símbolos y Emojis</span>
              <button onClick={() => setIsOpen(false)} className="text-white/20 hover:text-white transition-colors">
